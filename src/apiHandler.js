@@ -26,17 +26,18 @@ async function getAllDetailsByUrl(pkmnUrl) {
   };
 }
 
+//Gets every pokemon of the evolution line and formats it
 async function getEvolutionLine(pDetails) {
   let speciesData = await axios.get(pDetails.data.species.url);
-  let eRes = await axios.get(speciesData.data.evolution_chain.url);
-  let evos = [];
+  let evoDetails = await axios.get(speciesData.data.evolution_chain.url);
+  let evolutions = [];
 
-  for (const first_evo of eRes.data.chain.evolves_to) {
+  for (const first_evo of evoDetails.data.chain.evolves_to) {
     let baseDetails = await axios.get(
-      `https://pokeapi.co/api/v2/pokemon/${eRes.data.chain.species.name}`,
+      `https://pokeapi.co/api/v2/pokemon/${evoDetails.data.chain.species.name}`,
     );
 
-    let evoDetails = await axios.get(
+    let f_evoDetails = await axios.get(
       `https://pokeapi.co/api/v2/pokemon/${first_evo.species.name}`,
     );
 
@@ -53,20 +54,21 @@ async function getEvolutionLine(pDetails) {
       });
     }
 
-    evos.push({
+    evolutions.push({
       baseForm: {
-        name: eRes.data.chain.species.name,
+        name: evoDetails.data.chain.species.name,
         img_url: baseDetails.data.sprites.front_default,
       },
       name: first_evo.species.name,
-      img_url: evoDetails.data.sprites.front_default,
+      img_url: f_evoDetails.data.sprites.front_default,
       next_evo: next_evo_val,
     });
   }
 
-  return evos;
+  return evolutions;
 }
 
+//Filters all the moves from the latest generation
 function filterMoveDetails(moveList) {
   return moveList.map(el => {
     let latestGame =
@@ -84,4 +86,5 @@ function filterMoveDetails(moveList) {
 module.exports = {
   getAllPokemon,
   getAllDetailsByUrl,
+  getEvolutionLine,
 };
