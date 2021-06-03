@@ -106,6 +106,7 @@
                   :items="selectedPokemon.moves"
                   :items-per-page="5"
                   class="elevation-1"
+                  sort-by="learn_method"
                 >
                   <template v-slot:item.move_name="{ item }">
                     {{ Capitalize(item.move_name) }}

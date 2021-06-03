@@ -71,8 +71,9 @@ async function getEvolutionLine(pDetails) {
 //Filters all the moves from the latest generation
 function filterMoveDetails(moveList) {
   return moveList.map(el => {
-    let latestGame =
-      el.version_group_details[el.version_group_details.length - 1];
+    let latestGame = el.version_group_details.find(
+      gen => (gen.version_group.name = 'ultra-sun-ultra-moon'),
+    );
 
     return {
       move_name: el.move.name,
