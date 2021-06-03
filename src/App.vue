@@ -6,7 +6,7 @@
       dark
     >
 
-    <h1>Pokédex</h1>
+    <h1 class="hoverItem" @click="backToTop">Pokédex</h1>
       <v-spacer></v-spacer>
 
     </v-app-bar>
@@ -18,21 +18,23 @@
 </template>
 
 <script>
-import axios from 'axios';
+import {getAllPokemon} from './apiHandler'
 
 export default {
   name: 'App',
-
-  data: () => ({
-    //
-  }),
+  methods: {
+    backToTop() {
+      this.$vuetify.goTo(0)
+    }
+  },
   async created(){
-    let {data} = await axios.get(this.$store.state.currentUrl);
-    data.results.forEach(el => {
-      this.$store.state.pokemonData.push(el);
-    });
-
-    console.log(this.$store.state.pokemonData);
+    this.$store.state.pokemonList = await getAllPokemon();
   }
 };
 </script>
+
+<style>
+  .hoverItem {
+    cursor: pointer;
+  }
+</style>
